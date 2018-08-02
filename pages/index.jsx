@@ -1,22 +1,26 @@
-import Link from "next/link";
-import Head from "../components/head";
-import Nav from "../components/nav";
+import React, { Component } from 'react';
+import { Provider } from 'mobx-react';
+import { initStore } from '../store';
+import Page from '../containers/Page';
+import Yeti from '../components/Yeti';
 
-class Index extends React.Component {
-  state = {
-    backgroundImages: {}
-  };
-  getBackgroundImages = () => {};
+class Index extends Component {
+  static getInitialProps({ req }) {
+    const isServer = !!req;
+    initStore(isServer);
+    return { isServer };
+  }
+  constructor(props) {
+    super(props);
+    this.store = initStore(props.isServer);
+  }
   render() {
     return (
-      <div>
-        <Head title="Home" />
-        <Nav />
-
-        <p>Home</p>
-
-        <style jsx>{``}</style>
-      </div>
+      <Provider store={this.store}>
+        <Page title="A React JS Boilerplate">
+          <Yeti />
+        </Page>
+      </Provider>
     );
   }
 }

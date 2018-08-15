@@ -3,12 +3,12 @@ import 'firebase/auth';
 import 'firebase/database';
 
 const config = {
-  apiKey: 'AIzaSyDiZTqGx1SmGaI-iLbzquL_K_yptmmx5Nc',
-  authDomain: 'arts-of-the-yeti-b277d.firebaseapp.com',
-  databaseURL: 'https://arts-of-the-yeti-b277d.firebaseio.com',
-  projectId: 'arts-of-the-yeti-b277d',
-  storageBucket: 'arts-of-the-yeti-b277d.appspot.com',
-  messagingSenderId: '86229705142'
+  apiKey: process.env.GOOGLE_FIREBASE_API_KEY,
+  authDomain: process.env.GOOGLE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.GOOGLE_FIREBASE_DB_URL,
+  projectId: process.env.GOOGLE_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.GOOGLE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.GOOGLE_FIREBASE_SENDER_ID
 };
 if (!firebase.apps.length) {
   firebase.initializeApp(config);

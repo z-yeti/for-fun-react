@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Provider } from 'mobx-react';
 import { initStore } from '../store';
 import Page from '../containers/Page';
-import Home from '../containers/Home';
+import SignUpForm from '../components/SignUpForm';
 
-class Index extends Component {
+class SignUpPage extends Component {
   static getInitialProps({ req }) {
     const isServer = !!req;
     initStore(isServer);
@@ -18,10 +18,10 @@ class Index extends Component {
     return (
       <Provider store={this.store}>
         <Page title="A React JS Boilerplate">
-          <Home />
+          <SignUpForm />
         </Page>
       </Provider>
     );
   }
 }
-export default Index;
+export default SignUpPage;

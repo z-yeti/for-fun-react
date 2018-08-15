@@ -1,16 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
+import Router from 'next/router';
 import { auth, db } from '../firebase/firebase';
 
-const updateByPropertyName = (propertyName, value) => () => ({
-  [propertyName]: value
-});
 const INITIAL_STATE = {
-  username: 'z_yeti',
-  email: 'zach.millar@gmail.com',
-  passwordOne: 'Poopy123',
-  passwordTwo: 'Poopy123',
-  secretCode: 'y3t!',
+  username: process.env.SAMPLE_USERNAME,
+  email: process.env.SAMPLE_EMAIL,
+  passwordOne: process.env.SAMPLE_PASSWORD,
+  passwordTwo: process.env.SAMPLE_PASSWORD,
+  secretCode: '',
   error: null
 };
 
@@ -30,14 +28,17 @@ class SignUpForm extends Component {
   }
   onSubmit = event => {
     const { username, email, passwordOne } = this.state;
-    const { handleSignInStatusChange } = this.props.store;
+    const { checkAuthUser, updateByPropertyName } = this.props.store;
     auth
       .createUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         this.doCreateUser(authUser.user.uid, username, email);
       })
       .then(() => {
-        handleSignInStatusChange();
+        checkAuthUser();
+      })
+      .then(() => {
+        Router.push('/');
       })
       .catch(error => {
         this.setState(updateByPropertyName('error', error));
@@ -54,6 +55,7 @@ class SignUpForm extends Component {
       error,
       secretCode
     } = this.state;
+    const { updateByPropertyName } = this.props.store;
 
     const isInvalid =
       secretCode !== process.env.SECRET_CODE ||

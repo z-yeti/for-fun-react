@@ -1,26 +1,26 @@
 import { action, observable } from 'mobx';
 import { auth } from './firebase/firebase';
-import Router from 'next/router';
 
 let store = null;
 
 class Store {
   @observable
-  greeting = `Welcome to the Yeti's land`;
-  @observable
-  isSignedIn = false;
+  authUser = null;
 
   @action
-  handleSignInStatusChange = () => {
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        this.isSignedIn = true;
-        Router.push('/');
+  checkAuthUser = () => {
+    auth.onAuthStateChanged(authUser => {
+      if (authUser) {
+        this.authUser = authUser;
       } else {
-        this.isSignedIn = false;
+        this.authUser = null;
       }
     });
   };
+  @action
+  updateByPropertyName = (propertyName, value) => ({
+    [propertyName]: value
+  });
 }
 
 export function initStore(isServer) {

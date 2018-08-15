@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import Router from 'next/router';
 import { observer, inject } from 'mobx-react';
+import { auth } from '../firebase/firebase';
 
 @inject('store')
 @observer
@@ -12,16 +13,23 @@ class SignInUpOutButtons extends Component {
     Router.push(`/signup`);
   };
   handleSignOutClick = () => {
-    console.log('sign out happens here');
+    auth
+      .signOut()
+      .then(function() {
+        Router.push(`/`);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
   render() {
-    const { isSignedIn } = this.props.store;
+    const { authUser } = this.props.store;
     return (
       <Fragment>
-        {isSignedIn && (
+        {authUser && (
           <button onClick={this.handleSignOutClick}>Sign Out</button>
         )}
-        {!isSignedIn && (
+        {!authUser && (
           <Fragment>
             <button onClick={this.handleSignInClick}>Sign In</button>
             <button onClick={this.handleSignUpClick}>Sign Up</button>

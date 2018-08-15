@@ -6,8 +6,18 @@ import SignInUpOutButtons from '../components/SignInUpOutButtons';
 @inject('store')
 @observer
 class Home extends Component {
+  updateByPropertyName = (propertyName, value) => ({
+    [propertyName]: value
+  });
   render() {
-    return <SignInUpOutButtons />;
+    const { authUser } = this.props.store;
+    return (
+      <Fragment>
+        <SignInUpOutButtons />
+        {!authUser && <p>Signed Out Right Now</p>}
+        {authUser && <p>Signed In Right Now</p>}
+      </Fragment>
+    );
   }
 }
 

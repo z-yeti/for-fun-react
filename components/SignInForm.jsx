@@ -1,10 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { observer, inject } from 'mobx-react';
-import { auth, db } from '../firebase/firebase';
+import Router from 'next/router';
+import { auth } from '../firebase/firebase';
 
-const updateByPropertyName = (propertyName, value) => () => ({
-  [propertyName]: value
-});
 const INITIAL_STATE = {
   email: '',
   password: '',
@@ -21,11 +19,14 @@ class SignInForm extends Component {
   }
   onSubmit = event => {
     const { email, password } = this.state;
-    const { handleSignInStatusChange } = this.props.store;
+    const { checkAuthUser, updateByPropertyName } = this.props.store;
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        handleSignInStatusChange();
+        checkAuthUser();
+      })
+      .then(() => {
+        Router.push('/');
       })
       .catch(error => {
         this.setState(updateByPropertyName('error', error));
@@ -35,6 +36,7 @@ class SignInForm extends Component {
   };
   render() {
     const { email, password, error } = this.state;
+    const { updateByPropertyName } = this.props.store;
 
     const isInvalid = password === '' || email === '';
 

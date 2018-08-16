@@ -4,11 +4,25 @@ import { auth } from './firebase/firebase';
 let store = null;
 
 class Store {
-  @observable
-  authUser = null;
+  @observable authUser = null;
+  @observable location = {
+    lat:null,
+    lng:null
+  };
 
-  @action
-  checkAuthUser = () => {
+  @action setLatLng = (lat, lng) => {
+    try {
+      lat = parseFloat(lat);
+      lng = parseFloat(lng);
+    } catch (e) {
+      console.warn('Invalid lat/lng', { lat, lng });
+    }
+    this.location = {
+      lat,
+      lng
+    };
+  }
+  @action checkAuthUser = () => {
     auth.onAuthStateChanged(authUser => {
       if (authUser) {
         this.authUser = authUser;
@@ -17,8 +31,7 @@ class Store {
       }
     });
   };
-  @action
-  updateByPropertyName = (propertyName, value) => ({
+  @action updateByPropertyName = (propertyName, value) => ({
     [propertyName]: value
   });
 }

@@ -4,8 +4,8 @@ import Router from 'next/router';
 import { auth } from '../firebase/firebase';
 
 const INITIAL_STATE = {
-  email: '',
-  password: '',
+  email: process.env.SAMPLE_EMAIL,
+  password: process.env.SAMPLE_PASSWORD,
   error: null
 };
 
@@ -17,6 +17,28 @@ class SignInForm extends Component {
 
     this.state = { ...INITIAL_STATE };
   }
+  handleGeolocation = () => {
+    if (navigator.geolocation) {
+      const options = { timeout: 60000 };
+      navigator.geolocation.getCurrentPosition(
+        this.getLatLng,
+        this.errorHandler,
+        options);
+    } else {
+      alert("Sorry, browser does not support geolocation!");
+    }
+  }
+  getLatLng = (pos) => {
+    const { coords: { latitude, longitude } } = pos;
+    this.props.store.setLatLng(latitude, longitude);
+  }
+  errorHandler = (err) => {
+    if (err.code === 1) {
+      alert('Geoloction was declined, please search manually')
+    } else if (err.code === 2 || err.code === 3) {
+      alert('Geoloction encountered an error, please search manually')
+    }
+  }
   onSubmit = event => {
     const { email, password } = this.state;
     const { checkAuthUser, updateByPropertyName } = this.props.store;
@@ -27,6 +49,9 @@ class SignInForm extends Component {
       })
       .then(() => {
         Router.push('/');
+      })
+      .then(() => {
+        this.handleGeolocation();
       })
       .catch(error => {
         this.setState(updateByPropertyName('error', error));

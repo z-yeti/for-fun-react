@@ -10,12 +10,17 @@ class Home extends Component {
     [propertyName]: value
   });
   render() {
-    const { authUser } = this.props.store;
+    const { authUser, location } = this.props.store;
     return (
       <Fragment>
         <SignInUpOutButtons />
         {!authUser && <p>Signed Out Right Now</p>}
-        {authUser && <p>Signed In Right Now</p>}
+        {authUser && (
+          <Fragment>
+            <p>Signed In Right Now</p>
+            <p>{location.lat}, {location.lng}</p>
+          </Fragment>
+        )}
       </Fragment>
     );
   }
